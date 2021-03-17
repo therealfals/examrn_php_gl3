@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creation de compte{% endblock %}
+
+{% block body %}
+    <h3 class="mb-3 mt-3 text-center">Creation CV</h3>
+
+    <form action="{{ path('create_cv') }}" class="row g-3 col-10 mx-auto">
+    <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Nom</label>
+        <input type="text" class="form-control" name="nom" id="inputEmail4">
+    </div>
+    <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Prenom</label>
+        <input type="text" class="form-control" name="prenom">
+    </div>
+    <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email">
+    </div>
+    <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Telephone</label>
+        <input type="password" class="form-control" name="telephone">
+    </div>
+    <div class="col-12">
+        <label for="inputAddress" class="form-label">Adresse</label>
+        <input type="text" class="form-control" id="inputAddress" name="adresse">
+    </div>
+    <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Age</label>
+        <input type="number" class="form-control" name="age">
+    </div>
+    <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Niveau etude</label>
+        <input type="text" class="form-control" name="niveau_etude">
+    </div>
+    <div class="col-12">
+        <label for="inputAddress2" class="form-label">Specialité</label>
+        <input type="text" class="form-control" id="inputAddress2" name="specialite">
+    </div>
+    <div class="col-md-12">
+        <label for="inputCity" class="form-label">Experience Professionelle</label>
+        <textarea type="text" class="form-control" name="experiencePro" id="inputCity">
+        </textarea>
+    </div>
+    <div class="col-md-12">
+        <label for="inputState" class="form-label">Categorie</label>
+        <select id="inputState" name="categorie" class="form-control">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+</form>
+{% endblock %}

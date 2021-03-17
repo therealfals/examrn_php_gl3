@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CV index{% endblock %}
+
+{% block body %}
+    <h1>CV index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Age</th>
+                <th>Adresse</th>
+                <th>Email</th>
+                <th>Telephone</th>
+                <th>Specialite</th>
+                <th>NiveauEtude</th>
+                <th>ExperienceProfessionnelle</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c_v in c_vs %}
+            <tr>
+                <td>{{ c_v.id }}</td>
+                <td>{{ c_v.nom }}</td>
+                <td>{{ c_v.prenom }}</td>
+                <td>{{ c_v.age }}</td>
+                <td>{{ c_v.adresse }}</td>
+                <td>{{ c_v.email }}</td>
+                <td>{{ c_v.telephone }}</td>
+                <td>{{ c_v.specialite }}</td>
+                <td>{{ c_v.niveauEtude }}</td>
+                <td>{{ c_v.experienceProfessionnelle }}</td>
+                <td>
+                    <a href="{{ path('c_v_show', {'id': c_v.id}) }}">show</a>
+                    <a href="{{ path('c_v_edit', {'id': c_v.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('c_v_new') }}">Create new</a>
+{% endblock %}

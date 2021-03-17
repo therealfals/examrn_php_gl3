@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emplois{% endblock %}
+
+{% block body %}
+    <h3 class="text-center mt-3 mb-3">Offres d'emplois disponibles</h3>
+
+    {% if emplois %}
+        <div class=" mx-auto col-md-10 mt-4 mb-4">
+        <div class="col-3 float-right mb-5">
+            <select onchange="getData()" id="categorie" class="form-control">
+                <option value="null">Categories</option>
+                {% for cat in categories %}
+
+                <option value="{{ cat.id }}">{{ cat.libelle }}</option>
+                {% endfor %}
+
+            </select>
+        </div>
+        </div>
+        <div class="row mx-auto col-md-10 mt-5  ">
+
+            {% for emploi in emplois %}
+                <div class="col-3" id="emploi{{ emploi.id }}">
+                    <div   class="card" style="width: 18rem;">
+                        {% if  emploi.avatar %}
+                            <img class="card-img-top" style="height: 150px" src="{{asset('/asset/uploads/')}}{{ emploi.avatar }}" alt="Card image cap">
+
+                        {% else %}
+                            <img class="card-img-top" style="height: 150px" src="{{asset('/asset/img/avatar.png')}}" alt="Card image cap">
+
+                        {% endif   %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ emploi.libelle }}</h5>
+                            <p class="card-text">{{ emploi.description }}</p>
+                            <hr>
+                            {% if emploi.salaire %}
+
+                                <span class="float-left btn btn-sm btn btn-outline-danger disabled">{{emploi.salaire   }}F.CFA</span>
+                            {% else %}
+                                <span class="float-left btn btn-sm btn btn-outline-danger disabled">A discuter</span>
+
+                            {% endif %}
+
+                            <a   href="/emploi/details/{{ emploi.id }}"  class="btn btn-sm btn-warning float-right"><i class="fa fa-eye"></i></a>
+                            {% if app.user  %}
+                            {% if app.user.roles[0]=="ROLE_ENTREPRISE"  %}
+                            <button   onclick="blockPostuler({{ emploi.id }})" class="btn btn-sm btn-info float-right">Postuler</button>
+
+                            {% endif %}
+                            {% if app.user.roles[0]=="ROLE_DEMANDEUREMPLOI"  %}
+                            <button   onclick="postulerEmploi({{ emploi.id }})" class="btn btn-sm btn-info float-right">Postuler</button>
+
+                            {%   endif  %}
+
+                            {% endif %}
+                            {% if app.user == null %}
+                            <button   onclick="connexionRequired()" class="btn btn-sm btn-info float-right">Postuler</button>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor%}
+
+        </div>
+        {{ knp_pagination_render(emplois) }}
+
+
+    {% endif %}
+    <script src="{{ asset('asset/js/scripts.js') }}">
+
+    </script>
+{% endblock %}
+

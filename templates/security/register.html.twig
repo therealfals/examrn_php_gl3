@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creation de compte{% endblock %}
+
+{% block body %}
+    <div class="col-md-6 mx-auto"style="margin-top: 150px">
+        <h1 class="text-center">Bienvenue</h1>
+        <h3 class="text-center mt-3 mb-3">Inscription</h3>
+        <div class="col-md-4 col-sm-4 col-4 mx-auto">
+            <img id="image" src="{{ asset('/asset/img/avatar.png') }}" style="height: 150px;cursor: pointer;width: 150px" class="img rounded rounded-circle">
+        </div>
+        <form method="post" enctype= "multipart/form-data" action="{{ path('register') }}" class="form-group co-md-6 mx-auto">
+            <label>Nom complet</label>
+            <input type="text" name="nomComplet" placeholder="Nom complet" class="form-control">
+
+            <label>Email</label>
+
+            <input type="text" name="email"     class="form-control">
+
+            <label>Telephone </label>
+
+                <input type="text" name="telephone"  placeholder="Telephone" class="form-control">
+            <label>Adresse </label>
+
+                <input type="text" name="adresse"  placeholder="Adresse" class="form-control">
+
+            <label>Mot de passe</label>
+
+            <input type="password" name="password" placeholder="Mot de passe" class="form-control">
+            <label>Confirmation</label>
+
+            <input type="password" name="password_confirm" placeholder="Confirmation" class="form-control">
+
+
+            <label>Vous etes ?</label>
+
+            <select name="type"  class="form-control">
+                <option value="" selected>Choisir...</option>
+                <option value="entreprise">Une entreprise</option>
+                <option value="demandeurEmploi">Un demandeur d'emploi</option>
+            </select>
+            <input type="file" hidden id="avatar" name="avatar">
+            <button type="submit" class="btn btn-success form-control mt-2 mb-2">Enregistrer</button>
+        </form>
+    </div>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+        $("#avatar").change(function() {
+            readURL(this);
+        });
+        $('#image').click(function () {
+            $("#avatar").click()
+        })
+    </script>
+{% endblock %}

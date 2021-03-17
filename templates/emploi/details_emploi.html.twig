@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emplois{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row mt-5">
+        <h6 class="display-4">Détails de l'offre</h6>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 mb-4">
+            <div class="card">
+                <img
+                        class="card-img-top"
+                        src="https://source.unsplash.com/1080x720/?product"
+                        alt="Annonce 1"
+                />
+                <div class="card-body">
+                    <h5 class="card-title">{{ emploi.libelle }}</h5>
+                    <p class="card-text">
+                        {{ emploi.description }}
+                     </p>
+                    <hr />
+                    {% if emploi.salaire %}
+
+                        <span class="float-left btn btn-sm btn-outline-danger disabled">{{emploi.salaire   }}F.CFA</span>
+                    {% else %}
+                        <span class="float-left btn btn-sm btn-outline-danger disabled">A discuter</span>
+
+                    {% endif %}
+                     <span class="float-left btn btn-sm disabled">Ref: 67dh6dgo</span>
+                    <span class="float-left btn btn-sm disabled">Depuis: 999H</span>
+                    {% if app.user  %}
+                        {% if app.user.roles[0]=="ROLE_ENTREPRISE"  %}
+                            <button   onclick="blockPostuler({{ emploi.id }})" class="btn btn-sm btn-info float-right">Postuler</button>
+
+                        {% endif %}
+                        {% if app.user.roles[0]=="ROLE_DEMANDEUREMPLOI"  %}
+                            <button   onclick="postulerEmploi({{ emploi.id }})" class="btn btn-sm btn-info float-right">Postuler</button>
+
+                        {%   endif  %}
+
+                    {% endif %}
+                    {% if app.user == null %}
+                        <button   onclick="connexionRequired()" class="btn btn-sm btn-info float-right">Postuler</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div></div>
+    <script src="{{ asset('asset/js/scripts.js') }}">
+
+    </script>
+{% endblock %}

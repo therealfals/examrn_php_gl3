@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creation de compte{% endblock %}
+
+{% block body %}
+    <div class="col-md-6 mx-auto"style="margin-top: 50px">
+        <h3 class="text-center mt-3 mb-3">Creer une nouvelle offre d'emploi</h3>
+        <div class="col-md-4 col-sm-4 col-4 mx-auto">
+            <img id="image" src="{{ asset('/asset/img/avatar.png') }}" style="height: 150px;cursor: pointer;width: 150px" class="img rounded rounded-circle">
+        </div>
+        <form method="post" enctype= "multipart/form-data" action=" /emploi/update/{{ emploi.id }}" class="form-group co-md-6 mx-auto">
+            <label>Libelle</label>
+            <input type="text" name="libelle" value="{{ emploi.libelle }}" placeholder="Libelle" class="form-control">
+
+            <label>Description</label>
+
+            <textarea type="text" name="description"    placeholder="Description"  class="form-control">{{ emploi.description }}</textarea>
+            <input type="file" hidden id="avatar" name="avatar">
+            <label>Salaire</label>
+            <input type="number" name="salaire" value="{{ emploi.salaire }}"placeholder="Salaire" class="form-control">
+            <label>Categorie</label>
+
+            <select name="categorie">
+
+                {% for categorie in categories %}
+                {% if categorie.id == emploi.categorie.id %}
+                <option selected value="{{categorie.id }}">
+                    {{ categorie.libelle }}
+                </option>
+
+                {% else%}
+                    <option  value="{{categorie.id }}">
+                        {{ categorie.libelle }}
+                    </option>
+                {% endif %}
+
+
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success form-control mt-2 mb-2">Modifier</button>
+        </form>
+    </div>
+
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+        $("#avatar").change(function() {
+            readURL(this);
+        });
+        $('#image').click(function () {
+            $("#avatar").click()
+        })
+    </script>
+{% endblock %}
