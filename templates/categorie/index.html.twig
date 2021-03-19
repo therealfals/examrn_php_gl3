@@ -3,8 +3,8 @@
 {% block title %}Categorie index{% endblock %}
 
 {% block body %}
-    <h1>Categorie index</h1>
-
+    <h3 class="text-center">Liste des categories</h3>
+<div class="col-10 mx-auto">
     <table class="table">
         <thead>
             <tr>
@@ -19,17 +19,17 @@
                 <td>{{ categorie.id }}</td>
                 <td>{{ categorie.libelle }}</td>
                 <td>
-                    <a href="{{ path('categorie_show', {'id': categorie.id}) }}">show</a>
-                    <a href="{{ path('categorie_edit', {'id': categorie.id}) }}">edit</a>
+                    <a href="{{ path('categorie_show', {'id': categorie.id}) }}">Details</a>
+                    <a href="{{ path('categorie_edit', {'id': categorie.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Aucune categorie trouvée</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('categorie_new') }}">Create new</a>
+</div>
+    <a href="{{ path('categorie_new') }}">Ajouter categorie</a>
 {% endblock %}

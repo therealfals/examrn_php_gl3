@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/cv")
@@ -28,8 +29,10 @@ class CVController extends AbstractController
     /**
      * @Route("/new", name="c_v_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
-    {
+    public function new(Request $request, ValidatorInterface $validator): Response
+    {        $this->denyAccessUnlessGranted('ROLE_DEMANDEUREMPLOI');
+
+
         $cV = new CV();
         $form = $this->createForm(CVType::class, $cV);
         $form->handleRequest($request);
@@ -37,6 +40,14 @@ class CVController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
              $cV->setDemandeurEmploi($this->getUser());
+            $errors = $validator->validate($cV);
+            if (count($errors) > 0) {
+                return $this->render('cv/new.html.twig', [
+                    'c_v' => $cV,
+                    'form' => $form->createView(),
+                    'errors' => '',
+                ]);
+            }
             $entityManager->persist($cV);
             $entityManager->flush();
 
@@ -46,7 +57,8 @@ class CVController extends AbstractController
         return $this->render('cv/new.html.twig', [
             'c_v' => $cV,
             'form' => $form->createView(),
-        ]);
+            'errors' => '',
+         ]);
     }
 
     /**
@@ -71,6 +83,8 @@ class CVController extends AbstractController
      */
     public function edit(Request $request, CV $cV): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_DEMANDEUREMPLOI');
+
         $form = $this->createForm(CVType::class, $cV);
         $form->handleRequest($request);
 
@@ -91,6 +105,8 @@ class CVController extends AbstractController
      */
     public function delete(Request $request, CV $cV): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_DEMANDEUREMPLOI');
+
         if ($this->isCsrfTokenValid('delete'.$cV->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($cV);

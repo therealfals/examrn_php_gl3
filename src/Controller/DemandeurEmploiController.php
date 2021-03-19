@@ -17,6 +17,8 @@ class DemandeurEmploiController extends AbstractController{
      * @Route("/cv/create", name="create_cv")
      */
     public function createCv(Request $request){
+        $this->denyAccessUnlessGranted('ROLE_DEMANDEUREMPLOI');
+
         return $this->render("demandeur_emploi/create_cv.html.twig");
 
     }

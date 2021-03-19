@@ -3,10 +3,10 @@
 {% block title %}Creation de compte{% endblock %}
 
 {% block body %}
-    <div class="col-md-6 mx-auto"style="margin-top: 150px">
+    <div class="col-md-6 mx-auto"style="margin-top: 50px">
          <h3 class="text-center mt-3 mb-3">Creer une nouvelle offre d'emploi</h3>
-        <div class="col-md-4 col-sm-4 col-4 mx-auto">
-            <img id="image" src="{{ asset('/asset/img/avatar.png') }}" style="height: 150px;cursor: pointer;width: 150px" class="img rounded rounded-circle">
+        <div class=" mx-auto" style="width: 200px">
+            <img id="image" src="{{ asset('/asset/img/placeholder.png') }}" style="height: 150px;cursor: pointer;width: 150px" class="img rounded rounded-circle">
         </div>
         <form method="post" enctype= "multipart/form-data" action="{{ path('create_emploi') }}" class="form-group co-md-6 mx-auto">
             <label>Libelle</label>
@@ -20,7 +20,7 @@
             <input type="number" name="salaire" placeholder="Salaire" class="form-control">
             <label>Categorie</label>
 
-            <select name="categorie">
+            <select name="categorie" class="form-control">
 
                     {% for categorie in categories %}
                 <option value="{{categorie.id }}">

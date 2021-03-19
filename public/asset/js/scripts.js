@@ -80,10 +80,9 @@ function postulerEmploi(id) {
                 success:function(data)
                 {
                     $('#loader').hide()
-                    $('#emploi'+id).hide()
-                    Swal.fire(
-                        'Supprimé!',
-                        'Offre supprimée avec succés.',
+                     Swal.fire(
+                        'Envoyé!',
+                        'Votre demande a été transmise avec succés!',
                         'success'
                     )
                 }

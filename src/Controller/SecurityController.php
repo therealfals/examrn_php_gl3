@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -27,6 +28,7 @@ class SecurityController extends AbstractController
     {
           if ($this->getUser()) {
               if ($this->getUser()->getRoles()[0]=='ROLE_DEMANDEUREMPLOI'){
+
                   return $this->redirectToRoute('all_emplois');
 
               }else{
@@ -43,17 +45,11 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    /**
-     * @Route("/logout", name="app_logout")
-     */
-    public function logout()
-    {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
+
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request,UserRepository $userRepository)
+    public function register(Request $request,UserRepository $userRepository, ValidatorInterface $validator)
     {
         if($request->isMethod('post')){
             $userData = $request->request->all();
@@ -81,12 +77,28 @@ class SecurityController extends AbstractController
             $user->setPassword($password);
             $user->setTelephone($userData['telephone']);
             $user->setAdresse($userData['adresse']);
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                return $this->render('security/register.html.twig', [
+                    'errors' => $errors,
+                ]);
+            }
             $em=$this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
         }
 
-        return $this->render('security/register.html.twig');
+        return $this->render('security/register.html.twig', [
+            'errors' => "",
+        ]);
+    }
+    /**
+     * @Route("/logout", name="app_logout")
+     */
+    public function logout()
+    {
+        dd('tyhjk');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

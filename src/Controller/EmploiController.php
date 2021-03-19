@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Emploi;
 use App\Repository\CategorieRepository;
+use App\Repository\CVRepository;
 use App\Repository\EmploiRepository;
 use App\Service\DefaultService;
 use Knp\Component\Pager\PaginatorInterface;
@@ -28,13 +29,36 @@ class EmploiController extends AbstractController{
     /**
      * @Route("/emploi/create", name="create_emploi")
      */
-    public function addEmploi(Request $request,CategorieRepository $categorieRepository){
+    public function addEmploi(Request $request,CategorieRepository $categorieRepository,CVRepository $cvRe){
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+            $entreprise=$this->getUser();
         $categories=$categorieRepository->findAll();
         if($request->isMethod('post')){
             $emploiData = $request->request->all();
              $image  = $request->files->get("avatar");
             $emploi = new Emploi();
-            $emploi->setCategorie($categorieRepository->find($emploiData['categorie']));
+            if (!empty($emploiData['categorie'])){
+                $cat=$categorieRepository->find($emploiData['categorie']);
+                 $emploi->setCategorie($cat);
+                $cvs=$cat->getCv();
+                    //$cvRe->findBy(["categories"=>$emploiData['categorie']]);
+                if(count($cvs)>0){
+
+                    foreach ($cvs as $cv){
+
+                         $message = (new \Swift_Message('Nouvelle offre d\'emploi postée'))
+                            ->setFrom('sac3g8@gmail.com')
+                            ->setTo($cv->getEmail())
+                            ->setBody(
+                                "<h3>Type: ".$emploiData['libelle']."<br>Contact de l'entreprise: ".$entreprise->getEmail()."</h3><p>Description: ".$emploiData['description']."</p>"
+                                ,
+                                'text/html'
+                            )
+                        ;
+                        $this->mailer->send($message);
+                    }
+                }
+            }
             if(!empty($emploiData['salaire'])){
                 if ($emploiData['salaire']>0){
                     $emploi->setSalaire((int)$emploiData['salaire']);
@@ -65,6 +89,8 @@ class EmploiController extends AbstractController{
      * @Route("/emploi/update/{id}", name="update_emploi")
      */
     public function updateEmploi($id,Request $request,CategorieRepository $categorieRepository,EmploiRepository $emploiRepository){
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+
         $emploi=$emploiRepository->findOneBy(["id"=>$id,"entreprise"=>$this->getUser()->getId()]);
         if (!$emploi){
             return $this->redirectToRoute('my_emplois_entreprise');
@@ -106,6 +132,8 @@ class EmploiController extends AbstractController{
      * @Route("/emploi/entreprise/list", name="my_emplois_entreprise")
      */
     public function myEmplois(Request $request){
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+
         $donnees = $this->emploiRepository->findBy(["entreprise"=>$this->getUser()->getId(),"isDeleted"=>false]);
         $emplois = $this->paginator->paginate(
             $donnees, // Requête contenant les données à paginer (ici nos articles)
@@ -170,27 +198,24 @@ class EmploiController extends AbstractController{
     /**
      * @Route("/emploi/postuler", name="delete_emploi")
      */
-    public function postulerEmploi(\Swift_Mailer $mailer){
+    public function postulerEmploi(\Swift_Mailer $mailer, CVRepository $CVRepository){
+        $this->denyAccessUnlessGranted('ROLE_DEMANDEUREMPLOI');
+
         $emploi = $this->emploiRepository->find($_POST['id']);
-        if ($emploi){
-            // $this->defaultService->sendMail($emploi->getEntreprise()->getEmail(),"erfgh","demande emploi",$this->mailer);
-            $message = (new \Swift_Message("bbbbbbbbbbbbbbbbbbbbbbb"))
-                ->setFrom('ababacarfall23@gmail.com')
-                ->setTo("erty@ghjk.yfgu")
+        $cv= $CVRepository->find($this->getUser()->getCv()->getId());
+             // $this->defaultService->sendMail($emploi->getEntreprise()->getEmail(),"erfgh","demande emploi",$this->mailer);
+            $message = (new \Swift_Message('Demande d\'emploi'))
+                ->setFrom('sac3g8@gmail.com')
+                ->setTo($this->getUser()->getEmail())
                 ->setBody(
-                    "<h1>edfghjjk</h1>"
-                    ,
+                    $this->renderView('emploi/postuler.html.twig',[
+                        "cv"=>$cv
+                    ])
+                     ,
                     'text/html'
                 )
             ;
               $mailer->send($message);
-              dd($emploi->getEntreprise()->getEmail());
-            dd($emploi);
-            $emploi->setIsDeleted(true);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($emploi);
-            $em->flush();
-            return new JsonResponse('ok',200);
+             return new JsonResponse('ok',200);
         }
-     }
-}
+ }

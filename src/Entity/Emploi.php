@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EmploiRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=EmploiRepository::class)
@@ -19,11 +20,13 @@ class Emploi
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="Le libelle est obligatoire")
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="La description est obligatoire")
      */
     private $description;
 

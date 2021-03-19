@@ -4,7 +4,16 @@
 
 {% block body %}
     <h3 class="mb-3 mt-3 text-center">Creation CV</h3>
-
+    {% if errors %}
+        <div class="alert alert-danger col-8 mx-auto">
+            <h3>Erreurs</h3>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     {{ include('cv/_form.html.twig') }}
 
     <a href="{{ path('c_v_index') }}">back to list</a>
